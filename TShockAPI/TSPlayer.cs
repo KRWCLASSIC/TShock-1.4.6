@@ -2516,7 +2516,18 @@ namespace TShockAPI
 			if (!RealPlayer || !ConnectionAlive)
 				return;
 
-			Client.Socket.AsyncSend(data, 0, data.Length, Client.ServerWriteCallBack);
+			try
+			{
+				Client.Socket.AsyncSend(data, 0, data.Length, Client.ServerWriteCallBack);
+			}
+			catch (System.Net.Sockets.SocketException)
+			{
+				Client.RequestTermination("TShock: send failed");
+			}
+			catch (ObjectDisposedException)
+			{
+				Client.RequestTermination("TShock: send on closed socket");
+			}
 		}
 
 		/// <summary>
