@@ -2520,13 +2520,9 @@ namespace TShockAPI
 			{
 				Client.Socket.AsyncSend(data, 0, data.Length, Client.ServerWriteCallBack);
 			}
-			catch (System.Net.Sockets.SocketException)
+			catch (Exception ex) when (ex is System.IO.IOException || ex is InvalidOperationException || ex is System.Net.Sockets.SocketException)
 			{
 				Client.RequestTermination("TShock: send failed");
-			}
-			catch (ObjectDisposedException)
-			{
-				Client.RequestTermination("TShock: send on closed socket");
 			}
 		}
 
